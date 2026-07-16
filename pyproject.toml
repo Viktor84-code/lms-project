@@ -39,7 +39,7 @@ skip = ".venv,venv,migrations"
 
 [tool.flake8]
 max-line-length = 119
-exclude = .venv,venv,migrations,__pycache__
+exclude = ".venv,venv,migrations,__pycache__"
 
 [tool.mypy]
 python_version = "3.10"
@@ -49,4 +49,4 @@ plugins = ["mypy_django_plugin.main"]
 [tool.pytest.ini_options]
 python_files = "test_*.py"
 testpaths = ["tests"]
-addopts = "--cov=.
+addopts = "--cov=."
