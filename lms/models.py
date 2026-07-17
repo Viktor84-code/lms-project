@@ -3,7 +3,7 @@ from django.db import models
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
-    preview = models.ImageField(upload_to='courses/', blank=True, null=True)
+    preview = models.ImageField(upload_to="courses/", blank=True, null=True)
     description = models.TextField()
 
     def __str__(self):
@@ -11,10 +11,10 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lessons")
     title = models.CharField(max_length=200)
     description = models.TextField()
-    preview = models.ImageField(upload_to='lessons/', blank=True, null=True)
+    preview = models.ImageField(upload_to="lessons/", blank=True, null=True)
     video_url = models.URLField()
 
     def __str__(self):
