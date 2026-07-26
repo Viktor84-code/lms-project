@@ -49,3 +49,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             avatar=validated_data.get('avatar', None)
         )
         return user
+
+
+class UserPublicProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'first_name', 'phone', 'city', 'avatar']
+
+
+class UserOwnProfileSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'phone', 'city', 'avatar', 'payments']

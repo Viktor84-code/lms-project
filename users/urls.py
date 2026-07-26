@@ -1,7 +1,10 @@
 from django.urls import path
 
 from users.views import (
-    UserRegistrationView, UserListView, UserDetailView
+    UserRegistrationView,
+    UserListView,
+    UserDetailView,
+    UserProfileView,
 )
 from .views import PaymentListView, UserProfileUpdateView
 
@@ -15,4 +18,5 @@ urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-register'),
     path('users/', UserListView.as_view(), name='user-list'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('profile/<int:pk>/', UserProfileView.as_view(), name='user-profile'),
 ]
