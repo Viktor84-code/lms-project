@@ -18,8 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
+            username=validated_data['email'],
             email=validated_data['email'],
-            username=validated_data.get('username', ''),
             password=validated_data['password'],
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
@@ -35,26 +35,20 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'password', 'first_name', 'last_name', 'phone', 'city', 'avatar']
+        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'phone', 'city', 'avatar']
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            email=validated_data['email'],
-            username=validated_data.get('username', ''),
-            password=validated_data['password'],
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
-            phone=validated_data.get('phone', ''),
-            city=validated_data.get('city', ''),
-            avatar=validated_data.get('avatar', None)
-        )
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
         return user
 
 
 class UserPublicProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'phone', 'city', 'avatar']
+        fields = ['id', 'email', 'first_name', 'phone', 'city', 'avatar']
 
 
 class UserOwnProfileSerializer(serializers.ModelSerializer):
@@ -62,4 +56,4 @@ class UserOwnProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'phone', 'city', 'avatar', 'payments']
+        fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'city', 'avatar', 'payments']
