@@ -48,6 +48,53 @@ class LessonAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('video_url', response.data)
 
+        def test_update_lesson(self):
+            lesson = Lesson.objects.create(
+                course=self.course,
+                title='Old Title',
+                description='Old Description',
+                video_url='https://www.youtube.com/watch?v=old',
+                owner=self.user
+            )
+            url = f'/api/lessons/{lesson.id}/'
+            data = {'title': 'New Title'}
+            response = self.client.patch(url, data)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            lesson.refresh_from_db()
+            self.assertEqual(lesson.title, 'New Title')
+
+        def test_delete_lesson(self):
+            lesson = Lesson.objects.create(
+                course=self.course,
+                title='To Delete',
+                description='To Delete',
+                video_url='https://www.youtube.com/watch?v=delete',
+                owner=self.user
+            )
+            url = f'/api/lessons/{lesson.id}/'
+            response = self.client.delete(url)
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Lesson.objects.count(), 0)
+
+        def test_cannot_delete_others_lesson(self):
+            other_user = User.objects.create(
+                email='other@test.com',
+                first_name='Other'
+            )
+            other_user.set_password('testpass')
+            other_user.save()
+
+            lesson = Lesson.objects.create(
+                course=self.course,
+                title='Other Lesson',
+                description='Other Description',
+                video_url='https://www.youtube.com/watch?v=other',
+                owner=other_user
+            )
+            url = f'/api/lessons/{lesson.id}/'
+            response = self.client.delete(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
 class SubscriptionAPITestCase(APITestCase):
     def setUp(self):
