@@ -198,6 +198,7 @@ class CoursePaymentViewTest(APITestCase):
         self.course = Course.objects.create(
             title='Pay Course',
             description='Pay Description',
+            price=1000,
             owner=self.user
         )
         self.client.force_authenticate(user=self.user)
@@ -214,6 +215,7 @@ class CoursePaymentViewTest(APITestCase):
         )
 
         response = self.client.post(f'/api/courses/{self.course.id}/pay/')
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('payment_url', response.data)
         self.assertIn('session_id', response.data)

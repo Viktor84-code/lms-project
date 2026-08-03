@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from h11 import Response
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -80,3 +79,18 @@ class SubscriptionView(APIView):
             message = 'Подписка добавлена'
 
         return Response({'message': message})
+
+
+class PaymentStatusView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, session_id):
+        try:
+            from lms.services import retrieve_checkout_session
+            session = retrieve_checkout_session(session_id)
+            return Response({
+                'session_id': session_id,
+                'status': session['payment_status'],
+            })
+        except Exception as e:
+            return Response({'error': str(e)}, status=400)
