@@ -12,6 +12,12 @@ class Course(models.Model):
         related_name='courses',
         verbose_name='Владелец'
     )
+    price = models.DecimalField(  # <-- ДОБАВИТЬ ЭТО
+        max_digits=10,
+        decimal_places=2,
+        default=1000,
+        verbose_name='Цена'
+    )
 
     def __str__(self):
         return self.title
