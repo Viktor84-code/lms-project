@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -6,6 +9,7 @@ from rest_framework.views import APIView
 
 from lms.models import Course, Lesson, Subscription
 from lms.serializers import CourseSerializer, LessonSerializer
+from lms.tasks import send_course_update_email
 from users.permissions import IsModer, IsOwner
 
 
@@ -27,6 +31,20 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        course = self.get_object()
+        old_updated_at = course.updated_at
+        serializer.save()
+
+        # Доп. задание: проверка на 4 часа
+        if old_updated_at:
+            time_diff = timezone.now() - old_updated_at
+            if time_diff > timedelta(hours=4):
+                send_course_update_email.delay(course.id)
+        else:
+            # Если курс создан впервые (не должно быть, но на всякий случай)
+            send_course_update_email.delay(course.id)
 
 
 class LessonListCreateView(generics.ListCreateAPIView):
