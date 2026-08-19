@@ -4,13 +4,14 @@
 
 ## Стек
 
-- Python 3.10+
+- Python 3.13
 - Django 6.0
 - Django REST Framework
 - PostgreSQL (по умолчанию SQLite)
+- Docker
 - Git
 
-## Быстрый старт
+## 🚀 Быстрый старт (локально)
 
 ```bash
 git clone https://github.com/Viktor84-code/lms-project.git
@@ -21,7 +22,31 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-API эндпоинты
+🐳 Запуск через Docker
+1. Подготовка
+Убедитесь, что Docker установлен на вашей машине.
+
+2. Настройка переменных окружения
+Создайте файл .env в корне проекта:
+
+env
+DB_NAME=lms_db
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
+3. Сборка и запуск
+bash
+docker-compose up -d --build
+4. Доступ
+API: http://localhost:8000/api/
+
+Swagger: http://localhost:8000/api/docs/
+
+5. Остановка
+bash
+docker-compose down
+📚 API Эндпоинты
 Метод	Эндпоинт	Описание
 GET	/api/courses/	Список курсов
 POST	/api/courses/	Создание курса
