@@ -2,14 +2,26 @@
 
 Бэкенд-сервис для управления курсами и уроками на Django + DRF.
 
-## Стек
+---
+
+## 🌐 Демо
+
+Проект доступен по адресу:  
+**[http://93.77.166.84](http://93.77.166.84)**
+
+---
+
+## 🧰 Стек
 
 - Python 3.13
 - Django 6.0
 - Django REST Framework
-- PostgreSQL (по умолчанию SQLite)
-- Docker
-- Git
+- PostgreSQL
+- Docker + Docker Compose
+- Gunicorn + Nginx
+- GitHub Actions (CI/CD)
+
+---
 
 ## 🚀 Быстрый старт (локально)
 
@@ -24,28 +36,38 @@ python manage.py runserver
 ```
 🐳 Запуск через Docker
 1. Подготовка
-Убедитесь, что Docker установлен на вашей машине.
+Убедитесь, что Docker и Docker Compose установлены.
 
 2. Настройка переменных окружения
-Создайте файл .env в корне проекта:
+Скопируйте .env.template в .env и заполните значения:
 
-env
-DB_NAME=lms_db
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
+bash
+```
+cp .env.template .env
 3. Сборка и запуск
 bash
 docker-compose up -d --build
+```
 4. Доступ
 API: http://localhost:8000/api/
 
 Swagger: http://localhost:8000/api/docs/
 
 5. Остановка
-bash
+```bash
 docker-compose down
+```
+⚙️ Продакшен-деплой
+Проект развёрнут на сервере с использованием:
+
+Gunicorn — WSGI-сервер
+
+Nginx — reverse-proxy
+
+Docker Compose — оркестрация контейнеров
+
+GitHub Actions — автоматический деплой при push в main
+
 📚 API Эндпоинты
 Метод	Эндпоинт	Описание
 GET	/api/courses/	Список курсов
